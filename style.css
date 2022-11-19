@@ -20,7 +20,7 @@ li.none-bg {background:none!important;}
 .bg-1 ul li a:hover {color:#fff; background:#ff9c00;}
  
 /*Левое меню и Контент*/
-#content {width:960px; padding:21px 0 0 0; }
+#content {width:960px; padding:20px 0 0 0; }
  
 /*Контент - правый блок*/
 .right { float:right; width:690px; padding:0 0 0 20px; text-align:justify;}
