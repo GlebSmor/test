@@ -18,4 +18,6 @@ jobs:
               accessKeyId: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
               secretAccessKey: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
               bucket: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
+              path: 'dist'
+              clear: true
 
