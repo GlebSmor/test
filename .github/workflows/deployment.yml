@@ -1,22 +1,38 @@
-name: Deploy-to-Yandex.Cloud
+name: Deploy to Yandex Cloud Object Storage
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - master
+
 jobs:
-  deploy:
-  
-    runs-on: ubuntu-latest
+    deploy:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x]
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Set up env
+              run: cp .env.ci .env 
     
-    steps:
-    - name: Login to Yandex Cloud Container Registry
-      id: login-cr
-      uses: yc-actions/yc-cr-login@v1
-      with:
-        yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-    - name: test
-      run: |
-        yc storage bucket list
-        
+            - name: Install NPM dependencies
+              run: npm ci
+    
+            - name: Build application
+              run: npm run build
+    
+            - uses: sergeevpasha/yandex-cloud-s3-sync-github-actions@v0.1.0
+              with:
+                YANDEX_CLOUD_ACCESS_KEY_ID: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
+                YANDEX_CLOUD_SECRET_ACCESS_KEY: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
+                YANDEX_CLOUD_BUCKET_NAME: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
+                YANDEX_CLOUD_REGION: ${{ secrets.YANDEX_CLOUD_REGION }}
+                PATH: "./dist"
+                CLEAR: true
+
   
