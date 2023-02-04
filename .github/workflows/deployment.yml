@@ -11,6 +11,11 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v3
+          - name: Deploy to Bucket
+            run: |
+                ls -la
+                pwd
+                aws --endpoint-url=https://storage.yandexcloud.net/ s3 cp --recursive ./ s3://smorodinovwork
 
           - name: Deploy to Yandex Cloud Object Storage
             uses: paulvstrashnov/yandex-s3-upload-action@main
