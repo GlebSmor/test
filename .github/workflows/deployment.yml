@@ -11,7 +11,6 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v3
-          - name: Create dir and file
 
           - name: Deploy to Yandex Cloud Object Storage
             uses: paulvstrashnov/yandex-s3-upload-action@main
