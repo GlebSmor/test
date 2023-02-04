@@ -8,31 +8,21 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [16.x]
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ matrix.node-version }}
+          - name: Checkout
+            uses: actions/checkout@v3
+            with: 
+              persist-credentials: false
+          - name: Create dir and file
+            run: |
+              mkdir -p slides/
+              echo "Test" > ./slides/file.txt
+          - name: Deploy to Yandex Cloud Object Storage
+            uses: paulvstrashnov/yandex-s3-upload-action@main
+            with:
+              accessKeyId: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
+              secretAccessKey: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
+              bucket: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
+              localPath: "./slides"
+              remotePath: "./slides"
 
-            - name: Set up env
-              run: cp .env.ci .env 
-    
-            - name: Install NPM dependencies
-              run: npm ci
-    
-            - name: Build application
-              run: npm run build
-    
-            - uses: sergeevpasha/yandex-cloud-s3-sync-github-actions@v0.1.0
-              with:
-                YANDEX_CLOUD_ACCESS_KEY_ID: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
-                YANDEX_CLOUD_SECRET_ACCESS_KEY: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
-                YANDEX_CLOUD_BUCKET_NAME: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
-                YANDEX_CLOUD_REGION: ${{ secrets.YANDEX_CLOUD_REGION }}
-                PATH: "./dist"
-                CLEAR: true
-
-  
