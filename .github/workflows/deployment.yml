@@ -11,6 +11,6 @@ jobs:
     
     steps:
     - name: Hello
-      run: ech 'Hello World!'
+      run: echo 'Hello World!'
       
   
