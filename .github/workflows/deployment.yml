@@ -3,7 +3,7 @@ name: Deploy to Yandex Cloud Object Storage
 on:
     push:
         branches:
-            - master
+            - main
 
 jobs:
     deploy:
