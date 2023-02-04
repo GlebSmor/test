@@ -11,6 +11,9 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v3
+          - name: rm git
+            run: |
+                rm ./.git*
 
           - name: Deploy to Yandex Cloud Object Storage
             uses: paulvstrashnov/yandex-s3-upload-action@main
@@ -19,5 +22,5 @@ jobs:
               secretAccessKey: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
               bucket: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
               localPath: './'
-              remotePath: 'dist'
+              remotePath: ''
 
