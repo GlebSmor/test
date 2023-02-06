@@ -18,7 +18,6 @@ jobs:
       
     - name: Configure my AWS Credentials
       run: |
-        cd .aws/
         ls -la
         
         
