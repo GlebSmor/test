@@ -19,6 +19,7 @@ jobs:
     - name: Configure my AWS Credentials
       run: |
         ls -la
+        cat .aws/con*
         
         
     - name: Copy Deployment package to bucket
