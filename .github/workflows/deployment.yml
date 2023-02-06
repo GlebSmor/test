@@ -21,6 +21,10 @@ jobs:
       with:
         aws-access-key-id    :  ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
         aws-secret-access-key:  ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+    - name: hz
+      run: |
+        cat .aws/config 
         
     - name: Copy Deployment package to bucket
       run : aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive --exclude ".git*" local_files/ s3://${{ env.BUCKET_NAME }}/path_style_prefix/
