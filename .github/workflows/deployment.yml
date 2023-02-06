@@ -1,23 +1,33 @@
-name: Deploy to Yandex Cloud Object Storage
+name: CI-CD-Pipeline-to-Yandex-Object-Storage
+env:
+  REGION_NAME           : "ru-central1"
+  BUCKET_NAME           : "smorodinovwork"
 
-on:
-    push:
-        branches:
-            - main
+on: 
+  push:
+    branches: 
+      - main
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
+  my_ci_part:
+    runs-on: ubuntu-latest
 
-          - name: Deploy to Yandex Cloud Object Storage
-            uses: paulvstrashnov/yandex-s3-upload-action@main
-            with:
-              accessKeyId: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
-              secretAccessKey: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
-              bucket: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
- 
+    steps:
+    - name: Git clone our repo
+      uses: actions/checkout@v3
+      
+    - name: Configure my AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id    :  ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
+        aws-secret-access-key:  ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
+        aws-region           :  ${{ env.REGION_NAME }}
+        
+    - name: Copy Deployment package to bucket
+      run : aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive --exclude ".git*" local_files/ s3://${{ env.BUCKET_NAME }}/path_style_prefix/
+
+    
+    - name: Print Happy Message for CI finish
+      run : echo "CI Pipeline part Finished successfully!"
 
 
