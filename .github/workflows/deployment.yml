@@ -1,7 +1,4 @@
 name: CI-CD-Pipeline-to-Yandex-Object-Storage
-env:
-  REGION_NAME           : "ru-central1"
-  BUCKET_NAME           : "smorodinovwork"
 
 on: 
   push:
@@ -11,23 +8,17 @@ on:
 jobs:
   my_ci_part:
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Git clone our repo
-      uses: actions/checkout@v3
-      
-    - name: Configure my AWS Credentials
-      run: |
-        ls -la
-        cd
-        cat .aws/con*
-        
-        
-    - name: Copy Deployment package to bucket
-      run : aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive --exclude ".git*" local_files/ s3://${{ env.BUCKET_NAME }}/path_style_prefix/
-
     
-    - name: Print Happy Message for CI finish
-      run : echo "CI Pipeline part Finished successfully!"
-
-
+    steps:
+            - uses: actions/checkout@v3
+            # Deploy
+            - uses: nekitcorp/yandex-storage-website-action@v2
+              with:
+                  access-key-id: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
+                  secret-access-key: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
+                  bucket: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
+                  include: |
+                      **/*
+                  exclude: |
+                      .git*
+                  clear: true
