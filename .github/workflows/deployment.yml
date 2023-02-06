@@ -1,4 +1,4 @@
-name: CI-CD-Pipeline-to-Yandex-Object-Storage
+name: Upload-to-Yandex-Object-Storage
 
 on: 
   push:
@@ -10,15 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-            - uses: actions/checkout@v3
-            # Deploy
-            - uses: nekitcorp/yandex-storage-website-action@v2
-              with:
-                  access-key-id: ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
-                  secret-access-key: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
-                  bucket: ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
-                  include: |
-                      **/*
-                  exclude: |
-                      .git*
-                  clear: true
+    
+    - name: Copy GitHub Repo
+      uses: actions/checkout@v3
+      
+    - name: Copy to Yandex-Object-Storage
+      uses: nekitcorp/yandex-storage-website-action@v2
+      with:
+          access-key-id    : ${{ secrets.YANDEX_CLOUD_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.YANDEX_CLOUD_SECRET_ACCESS_KEY }}
+          bucket           : ${{ secrets.YANDEX_CLOUD_BUCKET_NAME }}
+          include: |
+                  **/*
+          exclude: |
+                  .git*
+          clear: true
